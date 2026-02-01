@@ -7,6 +7,7 @@
     import ExtraItems from "@/lib/src/UI/components/ExtraItems.svelte";
     import InputRow from "@/lib/src/UI/components/InputRow.svelte";
     import Password from "@/lib/src/UI/components/Password.svelte";
+    import { $msg as msg } from "@/lib/src/common/i18n";
     import {
         type BucketSyncSetting,
         type ObsidianLiveSyncSettings,
@@ -124,13 +125,13 @@
     }
 </script>
 
-<DialogHeader title="S3/MinIO/R2 Configuration" />
-<Guidance>Please enter the details required to connect to your S3/MinIO/R2 compatible object storage service.</Guidance>
-<InputRow label="Endpoint URL">
+<DialogHeader title={msg("setup.setupRemoteBucket.title")} />
+<Guidance>{msg("setup.setupRemoteBucket.guidance")}</Guidance>
+<InputRow label={msg("setup.setupRemoteBucket.labelEndpointURL")}>
     <input
         type="text"
         name="s3-endpoint"
-        placeholder="https://s3.amazonaws.com"
+        placeholder={msg("setup.setupRemoteBucket.placeholderEndpointURL")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -139,13 +140,13 @@
         bind:value={syncSetting.endpoint}
     />
 </InputRow>
-<InfoNote warning visible={isEndpointInsecure}>We can use only Secure (HTTPS) connections on Obsidian Mobile.</InfoNote>
+<InfoNote warning visible={isEndpointInsecure}>{msg("setup.setupRemoteBucket.noteInsecure")}</InfoNote>
 
-<InputRow label="Access Key ID">
+<InputRow label={msg("setup.setupRemoteBucket.labelAccessKeyID")}>
     <input
         type="text"
         name="s3-access-key-id"
-        placeholder="Enter your Access Key ID"
+        placeholder={msg("setup.setupRemoteBucket.placeholderAccessKeyID")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -154,19 +155,19 @@
     />
 </InputRow>
 
-<InputRow label="Secret Access Key">
+<InputRow label={msg("setup.setupRemoteBucket.labelSecretAccessKey")}>
     <Password
         name="s3-secret-access-key"
-        placeholder="Enter your Secret Access Key"
+        placeholder={msg("setup.setupRemoteBucket.placeholderSecretAccessKey")}
         required
         bind:value={syncSetting.secretKey}
     />
 </InputRow>
-<InputRow label="Bucket Name">
+<InputRow label={msg("setup.setupRemoteBucket.labelBucketName")}>
     <input
         type="text"
         name="s3-bucket-name"
-        placeholder="Enter your Bucket Name"
+        placeholder={msg("setup.setupRemoteBucket.placeholderBucketName")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -174,26 +175,26 @@
         bind:value={syncSetting.bucket}
     /></InputRow
 >
-<InputRow label="Region">
+<InputRow label={msg("setup.setupRemoteBucket.labelRegion")}>
     <input
         type="text"
         name="s3-region"
-        placeholder="Enter your Region (e.g., us-east-1, auto for R2)"
+        placeholder={msg("setup.setupRemoteBucket.placeholderRegion")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
         bind:value={syncSetting.region}
     />
 </InputRow>
-<InputRow label="Use Path-Style Access">
+<InputRow label={msg("setup.setupRemoteBucket.labelUsePathStyle")}>
     <input type="checkbox" name="s3-use-path-style" bind:checked={syncSetting.forcePathStyle} />
 </InputRow>
 
-<InputRow label="Folder Prefix">
+<InputRow label={msg("setup.setupRemoteBucket.labelFolderPrefix")}>
     <input
         type="text"
         name="s3-folder-prefix"
-        placeholder="Enter a folder prefix (optional)"
+        placeholder={msg("setup.setupRemoteBucket.placeholderFolderPrefix")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -201,23 +202,20 @@
     />
 </InputRow>
 <InfoNote>
-    If you want to store the data in a specific folder within the bucket, you can specify a folder prefix here.
-    Otherwise, leave it blank to store data at the root of the bucket.
+    {msg("setup.setupRemoteBucket.noteFolderPrefix")}
 </InfoNote>
-<InputRow label="Use internal API">
+<InputRow label={msg("setup.setupRemoteBucket.labelUseInternalAPI")}>
     <input type="checkbox" name="s3-use-internal-api" bind:checked={syncSetting.useCustomRequestHandler} />
 </InputRow>
 <InfoNote>
-    If you cannot avoid CORS issues, you might want to try this option. It uses Obsidian's internal API to communicate
-    with the S3 server. Not compliant with web standards, but works. Note that this might break in future Obsidian
-    versions.
+    {msg("setup.setupRemoteBucket.noteUseInternalAPI")}
 </InfoNote>
 
-<ExtraItems title="Advanced Settings">
-    <InputRow label="Custom Headers">
+<ExtraItems title={msg("setup.setupRemoteBucket.titleAdvancedSettings")}>
+    <InputRow label={msg("setup.setupRemoteBucket.labelCustomHeaders")}>
         <textarea
             name="bucket-custom-headers"
-            placeholder="e.g., x-example-header: value\n another-header: value2"
+            placeholder={msg("setup.setupRemoteBucket.placeholderCustomHeaders")}
             bind:value={syncSetting.bucketCustomHeaders}
             autocapitalize="off"
             spellcheck="false"
@@ -231,11 +229,11 @@
 </InfoNote>
 
 {#if processing}
-    Checking connection... Please wait.
+    {msg("setup.setupRemoteBucket.btnChecking")}
 {:else}
     <UserDecisions>
-        <Decision title="Test Settings and Continue" important disabled={!canProceed} commit={() => checkAndCommit()} />
-        <Decision title="Continue anyway" commit={() => commit()} />
-        <Decision title="Cancel" commit={() => cancel()} />
+        <Decision title={msg("setup.setupRemoteBucket.btnTestAndContinue")} important disabled={!canProceed} commit={() => checkAndCommit()} />
+        <Decision title={msg("setup.setupRemoteBucket.btnContinueAnyway")} commit={() => commit()} />
+        <Decision title={msg("setup.setupRemoteBucket.btnCancel")} commit={() => cancel()} />
     </UserDecisions>
 {/if}

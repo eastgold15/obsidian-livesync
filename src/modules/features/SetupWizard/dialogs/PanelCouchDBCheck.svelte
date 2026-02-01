@@ -6,6 +6,7 @@
     import Decision from "../../../../lib/src/UI/components/Decision.svelte";
     import UserDecisions from "../../../../lib/src/UI/components/UserDecisions.svelte";
     import { checkConfig, type ConfigCheckResult, type ResultError, type ResultErrorMessage } from "./utilCheckCouchDB";
+    import { $msg as msg } from "@/lib/src/common/i18n";
     type Props = {
         trialRemoteSetting: ObsidianLiveSyncSettings;
     };
@@ -64,21 +65,21 @@
     </div>
 {/snippet}
 <UserDecisions>
-    <Decision title="Detect and Fix CouchDB Issues" important={true} commit={testAndFixSettings} />
+    <Decision title={msg("setup.panelCouchDBCheck.btnDetectAndFix")} important={true} commit={testAndFixSettings} />
 </UserDecisions>
 <div class="check-results">
     <details open={!isAllSuccess}>
         <summary>
             {#if detectedIssues.length === 0}
-                No checks have been performed yet.
+                {msg("setup.panelCouchDBCheck.summaryNotChecked")}
             {:else if isAllSuccess}
-                All checks passed successfully!
+                {msg("setup.panelCouchDBCheck.summaryAllSuccess")}
             {:else}
-                {errorIssueCount} issue(s) detected!
+                {errorIssueCount} {msg("setup.panelCouchDBCheck.summaryIssues")}
             {/if}
         </summary>
         {#if detectedIssues.length > 0}
-            <h3>Issue detection log:</h3>
+            <h3>{msg("setup.panelCouchDBCheck.titleLog")}</h3>
             {#each detectedIssues as issue}
                 {@render result(issue)}
             {/each}

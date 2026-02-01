@@ -10,6 +10,7 @@
     import InfoNote from "@/lib/src/UI/components/InfoNote.svelte";
     import ExtraItems from "@/lib/src/UI/components/ExtraItems.svelte";
     import Check from "@/lib/src/UI/components/Check.svelte";
+    import { $msg as msg } from "@/lib/src/common/i18n";
     const TYPE_CANCEL = "cancelled";
 
     const TYPE_BACKUP_DONE = "backup_done";
@@ -60,67 +61,57 @@
     }
 </script>
 
-<DialogHeader title="Final Confirmation: Overwrite Server Data with This Device's Files" />
-<Guidance
-    >This procedure will first delete all existing synchronisation data from the server. Following this, the server data
-    will be completely rebuilt, using the current state of your Vault on this device (including its local database) as
-    <strong>the single, authoritative master copy</strong>.</Guidance
->
+<DialogHeader title={msg("setup.rebuildEverything.title")} />
+<Guidance>{@html msg("setup.rebuildEverything.guidance")}</Guidance>
 <InfoNote>
-    You should perform this operation only in exceptional circumstances, such as when the server data is completely
-    corrupted, when changes on all other devices are no longer needed, or when the database size has become unusually
-    large in comparison to the Vault size.
+    {msg("setup.rebuildEverything.noteWhenToUse")}
 </InfoNote>
-<Guidance important title="⚠️ Please Confirm the Following">
+<Guidance important title={msg("setup.rebuildEverything.guidanceConfirm")}>
     <Check
-        title="I understand that all changes made on other smartphones or computers possibly could be lost."
+        title={msg("setup.rebuildEverything.check1Title")}
         bind:value={confirmationCheck1}
     >
-        <InfoNote>There is a way to resolve this on other devices.</InfoNote>
-        <InfoNote>Of course, we can back up the data before proceeding.</InfoNote>
+        <InfoNote>{msg("setup.rebuildEverything.check1Note1")}</InfoNote>
+        <InfoNote>{msg("setup.rebuildEverything.check1Note2")}</InfoNote>
     </Check>
     <Check
-        title="I understand that other devices will no longer be able to synchronise, and will need to be reset the synchronisation information."
+        title={msg("setup.rebuildEverything.check2Title")}
         bind:value={confirmationCheck2}
     >
-        <InfoNote>by resetting the remote, you will be informed on other devices.</InfoNote>
+        <InfoNote>{msg("setup.rebuildEverything.check2Note")}</InfoNote>
     </Check>
-    <Check title="I understand that this action is irreversible once performed." bind:value={confirmationCheck3} />
+    <Check title={msg("setup.rebuildEverything.check3Title")} bind:value={confirmationCheck3} />
 </Guidance>
 <hr />
 <Instruction>
-    <Question>Have you created a backup before proceeding?</Question>
+    <Question>{msg("setup.rebuildEverything.questionBackup")}</Question>
     <InfoNote warning>
-        This is an extremely powerful operation. We strongly recommend that you copy your Vault folder to a safe
-        location.
+        {msg("setup.rebuildEverything.noteBackupWarning")}
     </InfoNote>
     <Options>
-        <Option selectedValue={TYPE_BACKUP_DONE} title="I have created a backup of my Vault." bind:value={backupType} />
+        <Option selectedValue={TYPE_BACKUP_DONE} title={msg("setup.rebuildEverything.optionBackupDoneTitle")} bind:value={backupType} />
         <Option
             selectedValue={TYPE_BACKUP_SKIPPED}
-            title="I understand the risks and will proceed without a backup."
+            title={msg("setup.rebuildEverything.optionBackupSkippedTitle")}
             bind:value={backupType}
         />
         <Option
             selectedValue={TYPE_UNABLE_TO_BACKUP}
-            title="I am unable to create a backup of my Vaults."
+            title={msg("setup.rebuildEverything.optionUnableToBackupTitle")}
             bind:value={backupType}
         >
             <InfoNote error visible={backupType === TYPE_UNABLE_TO_BACKUP}>
-                <strong
-                    >You should create a new synchronisation destination and rebuild your data there. <br /> After that,
-                    synchronise to a brand new vault on each other device with the new remote one by one.</strong
-                >
+                {@html msg("setup.rebuildEverything.noteUnableToBackup")}
             </InfoNote>
         </Option>
     </Options>
 </Instruction>
 <Instruction>
-    <ExtraItems title="Advanced">
-        <Check title="Prevent fetching configuration from server" bind:value={preventFetchingConfig} />
+    <ExtraItems title={msg("setup.rebuildEverything.titleAdvanced")}>
+        <Check title={msg("setup.rebuildEverything.checkPreventFetchConfig")} bind:value={preventFetchingConfig} />
     </ExtraItems>
 </Instruction>
 <UserDecisions>
-    <Decision title="I Understand, Overwrite Server" important disabled={!canProceed} commit={() => commit()} />
-    <Decision title="Cancel" commit={() => setResult(TYPE_CANCEL)} />
+    <Decision title={msg("setup.rebuildEverything.btnOverwrite")} important disabled={!canProceed} commit={() => commit()} />
+    <Decision title={msg("setup.rebuildEverything.btnCancel")} commit={() => setResult(TYPE_CANCEL)} />
 </UserDecisions>

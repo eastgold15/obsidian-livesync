@@ -6,7 +6,8 @@
     import Options from "@/lib/src/UI/components/Options.svelte";
     import Instruction from "@/lib/src/UI/components/Instruction.svelte";
     import UserDecisions from "@/lib/src/UI/components/UserDecisions.svelte";
-        const TYPE_COUCHDB = "couchdb";
+    import { $msg as msg } from "@/lib/src/common/i18n";
+    const TYPE_COUCHDB = "couchdb";
     const TYPE_BUCKET = "bucket";
     const TYPE_P2P = "p2p";
     const TYPE_CANCELLED = "cancelled";
@@ -18,13 +19,13 @@
     let userType = $state<ResultType>(TYPE_CANCELLED);
     let proceedTitle = $derived.by(() => {
         if (userType === TYPE_COUCHDB) {
-            return "Continue to CouchDB setup";
+            return msg("setup.setupRemote.proceedCouchDB");
         } else if (userType === TYPE_BUCKET) {
-            return "Continue to S3/MinIO/R2 setup";
+            return msg("setup.setupRemote.proceedBucket");
         } else if (userType === TYPE_P2P) {
-            return "Continue to Peer-to-Peer only setup";
+            return msg("setup.setupRemote.proceedP2P");
         } else {
-            return "Please select an option to proceed";
+            return msg("setup.setupRemote.proceedSelect");
         }
     });
     const canProceed = $derived.by(() => {
@@ -32,25 +33,22 @@
     });
 </script>
 
-<DialogHeader title="Enter Server Information" />
+<DialogHeader title={msg("setup.setupRemote.title")} />
 <Instruction>
-    <Question>Please select the type of server to which you are connecting.</Question>
+    <Question>{msg("setup.setupRemote.question")}</Question>
     <Options>
-        <Option selectedValue={TYPE_COUCHDB} title="CouchDB" bind:value={userType}>
-            This is the most suitable synchronisation method for the design. All functions are available. You must have
-            set up a CouchDB instance.
+        <Option selectedValue={TYPE_COUCHDB} title={msg("setup.setupRemote.optionCouchDBTitle")} bind:value={userType}>
+            {msg("setup.setupRemote.optionCouchDBDesc")}
         </Option>
-        <Option selectedValue={TYPE_BUCKET} title="S3/MinIO/R2 Object Storage" bind:value={userType}>
-            Synchronisation utilising journal files. You must have set up an S3/MinIO/R2 compatible object storage.
+        <Option selectedValue={TYPE_BUCKET} title={msg("setup.setupRemote.optionBucketTitle")} bind:value={userType}>
+            {msg("setup.setupRemote.optionBucketDesc")}
         </Option>
-        <Option selectedValue={TYPE_P2P} title="Peer-to-Peer only" bind:value={userType}>
-            This is an experimental feature enabling direct synchronisation between devices. No server is required, but
-            both devices must be online at the same time for synchronisation to occur, and some features may be limited.
-            Internet connection is only required to signalling (detecting peers) and not for data transfer.
+        <Option selectedValue={TYPE_P2P} title={msg("setup.setupRemote.optionP2PTitle")} bind:value={userType}>
+            {msg("setup.setupRemote.optionP2PDesc")}
         </Option>
     </Options>
 </Instruction>
 <UserDecisions>
     <Decision title={proceedTitle} important={canProceed} disabled={!canProceed} commit={() => setResult(userType)} />
-    <Decision title="No, please take me back" commit={() => setResult(TYPE_CANCELLED)} />
+    <Decision title={msg("setup.setupRemote.takeBack")} commit={() => setResult(TYPE_CANCELLED)} />
 </UserDecisions>

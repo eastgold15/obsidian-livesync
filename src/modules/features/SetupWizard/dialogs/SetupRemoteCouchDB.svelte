@@ -7,6 +7,7 @@
     import ExtraItems from "@/lib/src/UI/components/ExtraItems.svelte";
     import InputRow from "@/lib/src/UI/components/InputRow.svelte";
     import Password from "@/lib/src/UI/components/Password.svelte";
+    import { $msg as msg } from "@/lib/src/common/i18n";
     import {
         DEFAULT_SETTINGS,
         PREFERRED_SETTING_CLOUDANT,
@@ -136,13 +137,13 @@
     });
 </script>
 
-<DialogHeader title="CouchDB Configuration" />
-<Guidance>Please enter the CouchDB server information below.</Guidance>
-<InputRow label="URL">
+<DialogHeader title={msg("setup.setupRemoteCouchDB.title")} />
+<Guidance>{msg("setup.setupRemoteCouchDB.guidance")}</Guidance>
+<InputRow label={msg("setup.setupRemoteCouchDB.labelURL")}>
     <input
         type="text"
         name="couchdb-url"
-        placeholder="https://example.com"
+        placeholder={msg("setup.setupRemoteCouchDB.placeholderURL")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -151,12 +152,12 @@
         pattern="^https?://.+"
     />
 </InputRow>
-<InfoNote warning visible={isURIInsecure}>We can use only Secure (HTTPS) connections on Obsidian Mobile.</InfoNote>
-<InputRow label="Username">
+<InfoNote warning visible={isURIInsecure}>{msg("setup.setupRemoteCouchDB.noteInsecure")}</InfoNote>
+<InputRow label={msg("setup.setupRemoteCouchDB.labelUsername")}>
     <input
         type="text"
         name="couchdb-username"
-        placeholder="Enter your username"
+        placeholder={msg("setup.setupRemoteCouchDB.placeholderUsername")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -164,20 +165,20 @@
         bind:value={syncSetting.couchDB_USER}
     />
 </InputRow>
-<InputRow label="Password">
+<InputRow label={msg("setup.setupRemoteCouchDB.labelPassword")}>
     <Password
         name="couchdb-password"
-        placeholder="Enter your password"
+        placeholder={msg("setup.setupRemoteCouchDB.placeholderPassword")}
         bind:value={syncSetting.couchDB_PASSWORD}
         required
     />
 </InputRow>
 
-<InputRow label="Database Name">
+<InputRow label={msg("setup.setupRemoteCouchDB.labelDatabaseName")}>
     <input
         type="text"
         name="couchdb-database"
-        placeholder="Enter your database name"
+        placeholder={msg("setup.setupRemoteCouchDB.placeholderDatabaseName")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
@@ -187,23 +188,20 @@
     />
 </InputRow>
 <InfoNote>
-    You cannot use capital letters, spaces, or special characters in the database name. And not allowed to start with an
-    underscore (_).
+    {msg("setup.setupRemoteCouchDB.noteDatabaseName")}
 </InfoNote>
-<InputRow label="Use Internal API">
+<InputRow label={msg("setup.setupRemoteCouchDB.labelUseInternalAPI")}>
     <input type="checkbox" name="couchdb-use-internal-api" bind:checked={syncSetting.useRequestAPI} />
 </InputRow>
 <InfoNote>
-    If you cannot avoid CORS issues, you might want to try this option. It uses Obsidian's internal API to communicate
-    with the CouchDB server. Not compliant with web standards, but works. Note that this might break in future Obsidian
-    versions.
+    {msg("setup.setupRemoteCouchDB.noteUseInternalAPI")}
 </InfoNote>
 
-<ExtraItems title="Advanced Settings">
-    <InputRow label="Custom Headers">
+<ExtraItems title={msg("setup.setupRemoteCouchDB.titleAdvancedSettings")}>
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelCustomHeaders")}>
         <textarea
             name="couchdb-custom-headers"
-            placeholder="e.g., x-example-header: value\n another-header: value2"
+            placeholder={msg("setup.setupRemoteCouchDB.placeholderCustomHeaders")}
             bind:value={syncSetting.couchDB_CustomHeaders}
             autocapitalize="off"
             spellcheck="false"
@@ -211,11 +209,11 @@
         ></textarea>
     </InputRow>
 </ExtraItems>
-<ExtraItems title="Experimental Settings">
-    <InputRow label="Use JWT Authentication">
+<ExtraItems title={msg("setup.setupRemoteCouchDB.titleExperimentalSettings")}>
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelUseJWT")}>
         <input type="checkbox" name="couchdb-use-jwt" bind:checked={syncSetting.useJWT} />
     </InputRow>
-    <InputRow label="JWT Algorithm">
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelJWTAlgorithm")}>
         <select bind:value={syncSetting.jwtAlgorithm} disabled={!isUseJWT}>
             <option value="HS256">HS256</option>
             <option value="HS512">HS512</option>
@@ -223,52 +221,49 @@
             <option value="ES512">ES512</option>
         </select>
     </InputRow>
-    <InputRow label="JWT Expiration Duration (minutes)">
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelJWTExpDuration")}>
         <input
             type="text"
             name="couchdb-jwt-exp-duration"
-            placeholder="0"
+            placeholder={msg("setup.setupRemoteCouchDB.placeholderJWTExpDuration")}
             bind:value={() => `${syncSetting.jwtExpDuration}`, (v) => (syncSetting.jwtExpDuration = parseInt(v) || 0)}
             disabled={!isUseJWT}
         />
     </InputRow>
-    <InputRow label="JWT Key">
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelJWTKey")}>
         <textarea
             name="couchdb-jwt-key"
             rows="5"
             autocapitalize="off"
             spellcheck="false"
-            placeholder="Enter your JWT secret or private key"
+            placeholder={msg("setup.setupRemoteCouchDB.placeholderJWTKey")}
             bind:value={syncSetting.jwtKey}
             disabled={!isUseJWT}
         ></textarea>
     </InputRow>
     <InfoNote>
-        For HS256/HS512 algorithms, provide the shared secret key. For ES256/ES512 algorithms, provide the pkcs8
-        PEM-formatted private key.
+        {msg("setup.setupRemoteCouchDB.noteJWTKey")}
     </InfoNote>
-    <InputRow label="JWT Key ID (kid)">
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelJWTKeyID")}>
         <input
             type="text"
             name="couchdb-jwt-kid"
-            placeholder="Enter your JWT Key ID"
+            placeholder={msg("setup.setupRemoteCouchDB.placeholderJWTKeyID")}
             bind:value={syncSetting.jwtKid}
             disabled={!isUseJWT}
         />
     </InputRow>
-    <InputRow label="JWT Subject (sub)">
+    <InputRow label={msg("setup.setupRemoteCouchDB.labelJWTSubject")}>
         <input
             type="text"
             name="couchdb-jwt-sub"
-            placeholder="Enter your JWT Subject (CouchDB Username)"
+            placeholder={msg("setup.setupRemoteCouchDB.placeholderJWTSubject")}
             bind:value={syncSetting.jwtSub}
             disabled={!isUseJWT}
         />
     </InputRow>
     <InfoNote warning>
-        JWT (JSON Web Token) authentication allows you to securely authenticate with the CouchDB server using tokens.
-        Ensure that your CouchDB server is configured to accept JWTs and that the provided key and settings match the
-        server's configuration. Incidentally, I have not verified it very thoroughly.
+        {msg("setup.setupRemoteCouchDB.noteJWTWarning")}
     </InfoNote>
 </ExtraItems>
 
@@ -280,11 +275,11 @@
 </InfoNote>
 
 {#if processing}
-    Checking connection... Please wait.
+    {msg("setup.setupRemoteCouchDB.btnChecking")}
 {:else}
     <UserDecisions>
-        <Decision title="Test Settings and Continue" important disabled={!canProceed} commit={() => checkAndCommit()} />
-        <Decision title="Continue anyway" commit={() => commit()} />
-        <Decision title="Cancel" commit={() => cancel()} />
+        <Decision title={msg("setup.setupRemoteCouchDB.btnTestAndContinue")} important disabled={!canProceed} commit={() => checkAndCommit()} />
+        <Decision title={msg("setup.setupRemoteCouchDB.btnContinueAnyway")} commit={() => commit()} />
+        <Decision title={msg("setup.setupRemoteCouchDB.btnCancel")} commit={() => cancel()} />
     </UserDecisions>
 {/if}

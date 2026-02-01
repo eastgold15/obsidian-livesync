@@ -7,6 +7,7 @@
     import InfoNote from "@/lib/src/UI/components/InfoNote.svelte";
     import InputRow from "@/lib/src/UI/components/InputRow.svelte";
     import Password from "@/lib/src/UI/components/Password.svelte";
+    import { $msg as msg } from "@/lib/src/common/i18n";
     import { PouchDB } from "../../../../lib/src/pouchdb/pouchdb-browser";
     import {
         DEFAULT_SETTINGS,
@@ -193,104 +194,96 @@
     });
 </script>
 
-<DialogHeader title="P2P Configuration" />
-<Guidance>Please enter the Peer-to-Peer Synchronisation information below.</Guidance>
-<InputRow label="Enabled">
+<DialogHeader title={msg("setup.setupRemoteP2P.title")} />
+<Guidance>{msg("setup.setupRemoteP2P.guidance")}</Guidance>
+<InputRow label={msg("setup.setupRemoteP2P.labelEnabled")}>
     <input type="checkbox" name="p2p-enabled" bind:checked={syncSetting.P2P_Enabled} />
 </InputRow>
-<InputRow label="Relay URL">
+<InputRow label={msg("setup.setupRemoteP2P.labelRelayURL")}>
     <input
         type="text"
         name="p2p-relay-url"
-        placeholder="Enter the Relay URL)"
+        placeholder={msg("setup.setupRemoteP2P.placeholderRelayURL")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
         bind:value={syncSetting.P2P_relays}
     />
-    <button class="button" onclick={() => setDefaultRelay()}>Use vrtmrz's relay</button>
+    <button class="button" onclick={() => setDefaultRelay()}>{msg("setup.setupRemoteP2P.btnUseRelay")}</button>
 </InputRow>
-<InputRow label="Group ID">
+<InputRow label={msg("setup.setupRemoteP2P.labelGroupID")}>
     <input
         type="text"
         name="p2p-room-id"
-        placeholder="123-456-789-abc"
+        placeholder={msg("setup.setupRemoteP2P.placeholderGroupID")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
         bind:value={syncSetting.P2P_roomID}
     />
-    <button class="button" onclick={() => generateDefaultGroupId()}>Generate Random ID</button>
+    <button class="button" onclick={() => generateDefaultGroupId()}>{msg("setup.setupRemoteP2P.btnGenerateGroupID")}</button>
 </InputRow>
-<InputRow label="Passphrase">
-    <Password name="p2p-password" placeholder="Enter your passphrase" bind:value={syncSetting.P2P_passphrase} />
+<InputRow label={msg("setup.setupRemoteP2P.labelPassphrase")}>
+    <Password name="p2p-password" placeholder={msg("setup.setupRemoteP2P.placeholderPassphrase")} bind:value={syncSetting.P2P_passphrase} />
 </InputRow>
 <InfoNote>
-    The Group ID and passphrase are used to identify your group of devices. Make sure to use the same Group ID and
-    passphrase on all devices you want to synchronise.<br />
-    Note that the Group ID is not limited to the generated format; you can use any string as the Group ID.
+    {@html msg("setup.setupRemoteP2P.noteGroupID")}
 </InfoNote>
-<InputRow label="Device Peer ID">
+<InputRow label={msg("setup.setupRemoteP2P.labelDevicePeerID")}>
     <input
         type="text"
         name="p2p-device-peer-id"
-        placeholder="main-iphone16"
+        placeholder={msg("setup.setupRemoteP2P.placeholderDevicePeerID")}
         autocorrect="off"
         autocapitalize="off"
         spellcheck="false"
         bind:value={syncSetting.P2P_DevicePeerName}
     />
 </InputRow>
-<InputRow label="Auto Start P2P Connection">
+<InputRow label={msg("setup.setupRemoteP2P.labelAutoStart")}>
     <input type="checkbox" name="p2p-auto-start" bind:checked={syncSetting.P2P_AutoStart} />
 </InputRow>
 <InfoNote>
-    If "Auto Start P2P Connection" is enabled, the P2P connection will be started automatically when the plug-in
-    launches.
+    {msg("setup.setupRemoteP2P.noteAutoStart")}
 </InfoNote>
-<InputRow label="Auto Broadcast Changes">
+<InputRow label={msg("setup.setupRemoteP2P.labelAutoBroadcast")}>
     <input type="checkbox" name="p2p-auto-broadcast" bind:checked={syncSetting.P2P_AutoBroadcast} />
 </InputRow>
 <InfoNote>
-    If "Auto Broadcast Changes" is enabled, changes will be automatically broadcasted to connected peers without
-    requiring manual intervention. This requests peers to fetch this device's changes.
+    {msg("setup.setupRemoteP2P.noteAutoBroadcast")}
 </InfoNote>
-<ExtraItems title="Advanced Settings">
+<ExtraItems title={msg("setup.setupRemoteP2P.titleAdvancedSettings")}>
     <InfoNote>
-        TURN server settings are only necessary if you are behind a strict NAT or firewall that prevents direct P2P
-        connections. In most cases, you can leave these fields blank.
+        {msg("setup.setupRemoteP2P.noteTURNIntro")}
     </InfoNote>
     <InfoNote warning>
-        Using public TURN servers may have privacy implications, as your data will be relayed through third-party
-        servers. Even if your data are encrypted, your existence may be known to them. Please ensure you trust the TURN
-        server provider before using their services. Also your `network administrator` too. You should consider setting
-        up your own TURN server for your FQDN, if possible.
+        {msg("setup.setupRemoteP2P.noteTURNWarning")}
     </InfoNote>
-    <InputRow label="TURN Server URLs (comma-separated)">
+    <InputRow label={msg("setup.setupRemoteP2P.labelTURNServers")}>
         <textarea
             name="p2p-turn-servers"
-            placeholder="turn:turn.example.com:3478,turn:turn.example.com:443"
+            placeholder={msg("setup.setupRemoteP2P.placeholderTURNServers")}
             autocapitalize="off"
             spellcheck="false"
             bind:value={syncSetting.P2P_turnServers}
             rows="5"
         ></textarea>
     </InputRow>
-    <InputRow label="TURN Username">
+    <InputRow label={msg("setup.setupRemoteP2P.labelTURNUsername")}>
         <input
             type="text"
             name="p2p-turn-username"
-            placeholder="Enter TURN username"
+            placeholder={msg("setup.setupRemoteP2P.placeholderTURNUsername")}
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
             bind:value={syncSetting.P2P_turnUsername}
         />
     </InputRow>
-    <InputRow label="TURN Credential">
+    <InputRow label={msg("setup.setupRemoteP2P.labelTURNCredential")}>
         <Password
             name="p2p-turn-credential"
-            placeholder="Enter TURN credential"
+            placeholder={msg("setup.setupRemoteP2P.placeholderTURNCredential")}
             bind:value={syncSetting.P2P_turnCredential}
         />
     </InputRow>
@@ -299,11 +292,11 @@
     {error}
 </InfoNote>
 {#if processing}
-    Checking connection... Please wait.
+    {msg("setup.setupRemoteP2P.btnChecking")}
 {:else}
     <UserDecisions>
-        <Decision title="Test Settings and Continue" important disabled={!canProceed} commit={() => checkAndCommit()} />
-        <Decision title="Continue anyway" commit={() => commit()} />
-        <Decision title="Cancel" commit={() => cancel()} />
+        <Decision title={msg("setup.setupRemoteP2P.btnTestAndContinue")} important disabled={!canProceed} commit={() => checkAndCommit()} />
+        <Decision title={msg("setup.setupRemoteP2P.btnContinueAnyway")} commit={() => commit()} />
+        <Decision title={msg("setup.setupRemoteP2P.btnCancel")} commit={() => cancel()} />
     </UserDecisions>
 {/if}
