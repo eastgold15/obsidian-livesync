@@ -13,6 +13,7 @@ main_org_*.js
 *.js.map
 meta.json
 meta-*.json
+dist/
 
 
 # obsidian

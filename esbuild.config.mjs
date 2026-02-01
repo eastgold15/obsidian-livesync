@@ -15,6 +15,14 @@ import path from "node:path";
 const prod = process.argv[2] === "production" || process.env?.BUILD_MODE === "production";
 const keepTest = true; //!prod;
 
+// 确保构建完成后清理并复制必要文件到 dist
+const DIST_DIR = "./dist";
+const ensureDistDir = () => {
+    if (!fs.existsSync(DIST_DIR)) {
+        fs.mkdirSync(DIST_DIR, { recursive: true });
+    }
+};
+
 const manifestJson = JSON.parse(fs.readFileSync("./manifest.json") + "");
 const packageJson = JSON.parse(fs.readFileSync("./package.json") + "");
 const updateInfo = JSON.stringify(fs.readFileSync("./updates.md") + "");
@@ -95,18 +103,34 @@ const plugins = [
                 }
                 const filename = `meta-${prod ? "prod" : "dev"}.json`;
                 await fs.promises.writeFile(filename, JSON.stringify(result.metafile, null, 2));
+
+                // 确保 dist 目录存在
+                ensureDistDir();
+
                 if (prod) {
                     console.log("Performing terser");
                     const src = fs.readFileSync("./main_org.js").toString();
                     // @ts-ignore
                     const ret = await minify(src, terserOption);
                     if (ret && ret.code) {
+                        // 写入到根目录和 dist 目录
                         fs.writeFileSync("./main.js", ret.code);
+                        fs.writeFileSync("./dist/main.js", ret.code);
                     }
                     console.log("Finished terser");
                 } else {
                     fs.copyFileSync("./main_org.js", "./main.js");
+                    fs.copyFileSync("./main_org.js", "./dist/main.js");
                 }
+
+                // 复制 manifest.json 和 styles.css 到 dist
+                fs.copyFileSync("./manifest.json", "./dist/manifest.json");
+                if (fs.existsSync("./styles.css")) {
+                    fs.copyFileSync("./styles.css", "./dist/styles.css");
+                }
+
+                console.log(`Build artifacts copied to ${DIST_DIR}/`);
+
                 if (PATH_TEST_INSTALL) {
                     for (const installPath of PATH_TEST_INSTALL) {
                         const realPath = path.resolve(installPath);
@@ -118,8 +142,10 @@ const plugins = [
                         const manifestX = JSON.parse(fs.readFileSync("./manifest.json") + "");
                         manifestX.version = manifestJson.version + "." + Date.now();
                         fs.writeFileSync(path.join(installPath, "manifest.json"), JSON.stringify(manifestX, null, 2));
-                        fs.copyFileSync("./main.js", path.join(installPath, "main.js"));
-                        fs.copyFileSync("./styles.css", path.join(installPath, "styles.css"));
+                        fs.copyFileSync("./dist/main.js", path.join(installPath, "main.js"));
+                        if (fs.existsSync("./dist/styles.css")) {
+                            fs.copyFileSync("./dist/styles.css", path.join(installPath, "styles.css"));
+                        }
                     }
                 }
             });
