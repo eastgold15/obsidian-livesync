@@ -8,6 +8,7 @@
     import InfoNote from "@/lib/src/UI/components/InfoNote.svelte";
     import InputRow from "@/lib/src/UI/components/InputRow.svelte";
     import Password from "@/lib/src/UI/components/Password.svelte";
+    import { $msg as msg } from "@/lib/src/common/i18n";
 
     import { onMount } from "svelte";
     import { decryptString } from "../../../../lib/src/encryption/stringEncryption.ts";
@@ -34,7 +35,7 @@
         error = "";
         if (!seemsValid) return;
         if (!passphrase) {
-            error = "Passphrase is required.";
+            error = msg("setup.useSetupURI.errorPassphraseRequired");
             return;
         }
         try {
@@ -47,7 +48,7 @@
             // Logger("Settings imported successfully", LOG_LEVEL_NOTICE);
             return;
         } catch (e) {
-            error = "Failed to parse Setup-URI.";
+            error = msg("setup.useSetupURI.errorParseFailed");
             return;
         }
     }
@@ -56,17 +57,15 @@
     }
 </script>
 
-<DialogHeader title="Enter Setup URI" />
+<DialogHeader title={msg("setup.useSetupURI.title")} />
 <Guidance
-    >Please enter the Setup URI that was generated during server installation or on another device, along with the vault
-    passphrase.<br />
-    Note that you can generate a new Setup URI by running the "Copy settings as a new Setup URI" command in the command palette.</Guidance
+    >{msg("setup.useSetupURI.guidance")}</Guidance
 >
 
-<InputRow label="Setup-URI">
+<InputRow label={msg("setup.useSetupURI.labelSetupURI")}>
     <input
         type="text"
-        placeholder="obsidian://setuplivesync?settings=...."
+        placeholder={msg("setup.useSetupURI.placeholderSetupURI")}
         bind:value={setupURI}
         autocorrect="off"
         autocapitalize="off"
@@ -74,12 +73,12 @@
         required
     />
 </InputRow>
-<InfoNote visible={seemsValid}>The Setup-URI is valid and ready to use.</InfoNote>
+<InfoNote visible={seemsValid}>{msg("setup.useSetupURI.noteValid")}</InfoNote>
 <InfoNote warning visible={!seemsValid && setupURI.trim() != ""}>
-    The Setup-URI does not appear to be valid. Please check that you have copied it correctly.
+    {msg("setup.useSetupURI.noteInvalid")}
 </InfoNote>
-<InputRow label="Passphrase">
-    <Password placeholder="Enter your passphrase" bind:value={passphrase} required />
+<InputRow label={msg("setup.useSetupURI.labelPassphrase")}>
+    <Password placeholder={msg("setup.useSetupURI.placeholderPassphrase")} bind:value={passphrase} required />
 </InputRow>
 <InfoNote error visible={error.trim() != ""}>
     {error}
@@ -87,10 +86,10 @@
 
 <UserDecisions>
     <Decision
-        title="Test Settings and Continue"
+        title={msg("setup.useSetupURI.btnTestAndContinue")}
         important={true}
         disabled={!canProceed}
         commit={() => processSetupURI()}
     />
-    <Decision title="Cancel" commit={() => setResult(TYPE_CANCELLED)} />
+    <Decision title={msg("setup.useSetupURI.btnCancel")} commit={() => setResult(TYPE_CANCELLED)} />
 </UserDecisions>
